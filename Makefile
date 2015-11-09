@@ -1,7 +1,5 @@
-D=$(shell readlink -f data.cdb)
-
-run: data.cdb
-	sudo docker run -d --read-only -p 53:53/udp -v $D:/data/data.cdb wandernauta/tinydns
-
-data.cdb: data
-	./bin/tinydns-data
+remote: data.cdb
+        ./bin/tinydns-data
+        scp data $(REMOTE_IP):$(REMOTE_DATA_PATH)/data
+        scp data.cdb $(REMOTE_IP):$(REMOTE_DATA_PATH)/data.cdb.tmp
+        ssh $(REMOTE_IP) mv $(REMOTE_DATA_PATH)/data.cdb.tmp $(REMOTE_DATA_PATH)/data.cdb
